@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Data
 {
-    class Ball
+    public class Ball
     {
         private static int nextId = 0;
 
-        public int id;
-        public Vector2 position;
-        public float mass;
-        public float radius;
-        public Vector2 velocity;
+        public int Id { get; }
+        public Vector2 Position { get; private set; }
+        public Vector2 Velocity { get; set; }
+        public float Mass { get; private set; }
+        public float Radius { get; private set; }
 
         public Ball(Vector2 position, Vector2 velocity)
         {
-            this.position = position;
-            this.velocity = velocity;
+            Id = nextId++;
+            Position = position;
+            Velocity = velocity;
+            Mass = 10.0F;
+            Radius = 10.0F;
         }
 
-        public void setVelocity(Vector2 newVelocity)
+        public void UpdatePosition()
         {
-
-        }
-
-        public void updatePosition()
-        {
-
+            Position += Velocity;
         }
     }
 }
