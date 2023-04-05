@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Data
+﻿namespace Data
 {
-    class Table
+    public class Table
     {
-        float width;
-        float height;
+        float Width { get; }
+        float Height { get; }
 
         public Table(float width, float height)
         {
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
         }
     }
 }
