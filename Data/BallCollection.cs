@@ -19,6 +19,7 @@ namespace Data
             for (int i = 0; i < NumOfBalls; ++i)
             {
                 Balls.Add(new Ball(
+                    i,
                     new Vector2(
                         (float)Rand.NextDouble() * maxPosition.X,
                         (float)Rand.NextDouble() * maxPosition.Y
