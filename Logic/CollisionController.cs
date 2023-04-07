@@ -4,14 +4,27 @@ namespace Logic
 {
     public class CollisionController
     {
-        public static bool IsCollision(Vector2 ballPosition, Vector2 ballVelocity, float ballRadius, float boardWidth, float boardHeight)
+        public static bool IsCollisionWithVerticalWall(Vector2 ballPosition, Vector2 ballVelocity, float ballRadius, float boardWidth)
         {
-            // Calculate the position of the ball's center at the next time step
+            // Calculate the position of the ball at the next time step
             Vector2 nextPosition = ballPosition + ballVelocity;
 
-            // Check if the ball is about to collide with any of the walls
-            if (nextPosition.X - ballRadius < 0 || nextPosition.X + ballRadius > boardWidth ||
-                nextPosition.Y - ballRadius < 0 || nextPosition.Y + ballRadius > boardHeight)
+            // Check if the ball will hit the left or right wall at the next time step
+            if (nextPosition.X - ballRadius < 0 || nextPosition.X + ballRadius > boardWidth)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsCollisionWithHorizontalWall(Vector2 ballPosition, Vector2 ballVelocity, float ballRadius, float boardHeight)
+        {
+            // Calculate the position of the ball at the next time step
+            Vector2 nextPosition = ballPosition + ballVelocity;
+
+            // Check if the ball will hit the top or bottom wall at the next time step
+            if (nextPosition.Y - ballRadius < 0 || nextPosition.Y + ballRadius > boardHeight)
             {
                 return true;
             }
