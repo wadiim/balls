@@ -21,8 +21,8 @@ namespace Data
                 Balls.Add(new Ball(
                     i,
                     new Vector2(
-                        (float)Rand.NextDouble() * maxPosition.X,
-                        (float)Rand.NextDouble() * maxPosition.Y
+                        (float)Rand.NextDouble() * (maxPosition.X - 10.0F - float.Epsilon) + (10.0F + float.Epsilon),
+                        (float)Rand.NextDouble() * (maxPosition.Y - 10.0F - float.Epsilon) + (10.0F + float.Epsilon)
                         ),
                     new Vector2(
                         (float)Rand.NextDouble() * maxVelocity.X,
