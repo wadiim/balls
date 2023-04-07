@@ -5,7 +5,7 @@ using Data;
 namespace DataTest
 {
     [TestClass]
-    public class DataAbstractAPITests
+    public class DataAPITest
     {
         [TestMethod]
         public void TestCreateBalls()
