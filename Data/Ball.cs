@@ -16,7 +16,7 @@ namespace Data
             Position = position;
             Velocity = velocity;
             Mass = 10.0F;
-            Radius = 10.0F;
+            Radius = 2.0F;
         }
 
         public void UpdatePosition()

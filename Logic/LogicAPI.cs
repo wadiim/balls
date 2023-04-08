@@ -72,7 +72,7 @@ namespace Logic
             public override void StartSimulation(int numOfBalls)
             {
                 Vector2 maxPosition = new Vector2(dataAPI.GetTableWidth(), dataAPI.GetTableHeight());
-                Vector2 maxVelocity = new Vector2(10.0f, 10.0f);
+                Vector2 maxVelocity = new Vector2(0.5f, 0.5f);
                 dataAPI.CreateBalls(numOfBalls, maxPosition, maxVelocity);
 
                 // Run the simulation asynchronously
