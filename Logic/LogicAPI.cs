@@ -1,9 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using System.Threading.Tasks;
 using Data;
 
 namespace Logic
 {
-    public abstract class LogicAbstractAPI
+    public abstract class LogicAbstractAPI : IObservable<int>
     {
         public abstract void StartSimulation(int numOfBalls);
         public abstract void UpdateSimulation();
@@ -14,6 +16,8 @@ namespace Logic
         public abstract float GetTableWidth();
         public abstract float GetTableHeight();
 
+        public abstract IDisposable Subscribe(IObserver<int> observer);
+
         public static LogicAbstractAPI CreateLogicAPI(DataAbstractAPI dataAPI = default)
         {
             return new LogicAPI(dataAPI ?? DataAbstractAPI.CreateDataAPI());
@@ -22,6 +26,23 @@ namespace Logic
         private class LogicAPI : LogicAbstractAPI
         {
             private readonly DataAbstractAPI dataAPI;
+            private Task simulation;
+            private IObserver<int> observer = null;
+
+            private class Unsubscriber : IDisposable
+            {
+                private IObserver<int> _observer;
+
+                public Unsubscriber(IObserver<int> observer)
+                {
+                    this._observer = observer;
+                }
+
+                public void Dispose()
+                {
+                    _observer = null;
+                }
+            }
 
             public LogicAPI(DataAbstractAPI dataAPI)
             {
@@ -53,6 +74,17 @@ namespace Logic
                 Vector2 maxPosition = new Vector2(dataAPI.GetTableWidth(), dataAPI.GetTableHeight());
                 Vector2 maxVelocity = new Vector2(10.0f, 10.0f);
                 dataAPI.CreateBalls(numOfBalls, maxPosition, maxVelocity);
+
+                // Run the simulation asynchronously
+                simulation = Task.Run(RunSimulation);
+            }
+
+            private void RunSimulation()
+            {
+                while (true)
+                {
+                    UpdateSimulation();
+                }
             }
 
             public override void UpdateSimulation()
@@ -104,7 +136,19 @@ namespace Logic
                 for (int i = 0; i < ballsCount; ++i)
                 {
                     dataAPI.UpdateBallPosition(i);
+
+                    // Notify the observer that the position of the i-th ball has changed
+                    if (observer != null)
+                    {
+                        observer.OnNext(i);
+                    }
                 }
+            }
+
+            public override IDisposable Subscribe(IObserver<int> observer)
+            {
+                this.observer = observer;
+                return new Unsubscriber(this.observer);
             }
         }
     }
