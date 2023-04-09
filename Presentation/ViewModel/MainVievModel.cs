@@ -16,7 +16,18 @@ namespace ViewModel
         public ICommand StartButtonClick { get; set; }
         public float CanvasWidth { get; }
         public float CanvasHeight { get; }
-        private string _InputText;
+        public string Input { get; set; }
+        private bool _isIdle;
+
+        public bool IsIdle
+        {
+            get => _isIdle;
+            set
+            {
+                _isIdle = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public MainViewModel()
         {
@@ -26,12 +37,16 @@ namespace ViewModel
             CanvasWidth = modelAPI.GetCanvasWidth();
             CanvasHeight = modelAPI.GetCanvasHeight();
 
+            Input = "1";
+            IsIdle = true;
+
             StartButtonClick = new RelayCommand(() => StartButtonClickHandler());
         }
 
         private void StartButtonClickHandler()
         {
-            int numOfBalls = ReadFromTextBox();
+            IsIdle = false;
+            int numOfBalls = ReadInput();
             modelAPI.StartSimulation(numOfBalls);
 
             for (int i = 0; i < numOfBalls; i++)
@@ -40,24 +55,9 @@ namespace ViewModel
             }
         }
 
-        public string InputText
+        public int ReadInput()
         {
-            get => _InputText;
-            set
-            {
-                _InputText = value;
-                NotifyPropertyChanged(nameof(InputText));
-            }
-        }
-
-        public int ReadFromTextBox()
-        {
-            if (int.TryParse(InputText, out _) && InputText != "0")
-            {
-                int number = int.Parse(InputText);
-                return number > 32 ? 32 : number;
-            }
-            return 0;
+            return int.TryParse(Input, out _) && Input != "0" ? int.Parse(Input) : 0;
         }
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
