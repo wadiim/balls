@@ -3,10 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:View"
+        xmlns:model="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="TPW" Height="450" Width="800">
+        Title="TPW" Height="516" Width="612">
+    <Window.DataContext>
+        <model:MainViewModel />
+    </Window.DataContext>
     <Grid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="5" >Number of balls:</Label>
+                <TextBox Width="80" Margin="5" Text="{Binding InputText}"/>
+                <Button Content="START" Margin="5" Width="50" Command="{Binding StartButtonClick}" />
+            </StackPanel>
+            <Border BorderBrush="Black" BorderThickness="1" Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}">
 
+                <ItemsControl ItemsSource="{Binding Balls}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas x:Name="BallCanvas" Width="576" Height="432" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width= "{Binding Diameter}" Height="{Binding Diameter}" Fill="Blue" Stroke="Black" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding Left}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Top}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Border>
+        </StackPanel>
     </Grid>
 </Window>
