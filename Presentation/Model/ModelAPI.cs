@@ -26,8 +26,8 @@ namespace Model
 
         public abstract IBall GetBallModel(int index);
 
-        public abstract int GetCanvasWidth();
-        public abstract int GetCanvasHeight();
+        public abstract float GetCanvasWidth();
+        public abstract float GetCanvasHeight();
 
         public static ModelAbstractAPI CreaetModelAPI(LogicAbstractAPI logicAPI = default)
         {
@@ -38,6 +38,8 @@ namespace Model
 
         private class ModelAPI : ModelAbstractAPI
         {
+            private readonly static float Ratio = 4.5f;
+
             private readonly LogicAbstractAPI logicAPI;
             private readonly List<BallModel> Balls = new List<BallModel>();
             private readonly IDisposable unsubscriber;
@@ -60,8 +62,6 @@ namespace Model
 
             public ModelAPI(LogicAbstractAPI logicAPI)
             {
-                System.Diagnostics.Trace.WriteLine("Initializing ModelAPI");
-
                 this.logicAPI = logicAPI;
                 unsubscriber = logicAPI.Subscribe(this);
             }
@@ -87,31 +87,21 @@ namespace Model
                 {
                     BallModel ball = Balls[value];
                     Vector2 position = logicAPI.GetBallPosition(value);
-                    float diameter = 2 * logicAPI.GetBallRadius(value) * (GetCanvasWidth() / logicAPI.GetTableWidth());
-                    double top = position.Y * GetCanvasHeight() / logicAPI.GetTableHeight() - (diameter / 2);
-                    double left = position.X * GetCanvasWidth() / logicAPI.GetTableWidth() - (diameter / 2);
+                    float radius = logicAPI.GetBallRadius(value) * Ratio;
 
-                    System.Diagnostics.Trace.WriteLine("ModelAPI: Updating Balls[" + value + "] position: (" + top + ", " + left + ")");
-                    ball.Move(top, left);
+                    ball.Move((position.Y * Ratio) - radius, (position.X * Ratio) - radius);
                 }
             }
 
             public override void StartSimulation(int numOfBalls)
             {
-                System.Diagnostics.Trace.WriteLine("ModelAPI: Starting simulation with " + numOfBalls + " balls");
-
                 logicAPI.StartSimulation(numOfBalls);
 
                 for (int i = 0; i < numOfBalls; i++)
                 {
                     Vector2 position = logicAPI.GetBallPosition(i);
-                    float diameter = 2 * logicAPI.GetBallRadius(i) * (GetCanvasWidth() / logicAPI.GetTableWidth());
-                    double top = position.Y * GetCanvasHeight() / logicAPI.GetTableHeight() - (diameter / 2);
-                    double left = position.X * GetCanvasWidth() / logicAPI.GetTableWidth() - (diameter / 2);
-
-                    System.Diagnostics.Trace.WriteLine("ModelAPI: Creating BallModel: Id = " + i + "; Position = (" + top + ", " + left + ")");
-                    BallModel ball = new BallModel(i, top, left, diameter);
-                    Balls.Add(ball);
+                    float radius = logicAPI.GetBallRadius(i) * Ratio;
+                    Balls.Add(new BallModel(i, (position.Y * Ratio) - radius, (position.X * Ratio) - radius, 2 * radius));
                 }
             }
 
@@ -121,14 +111,14 @@ namespace Model
                 return new Unsubscriber(this.observer);
             }
 
-            public override int GetCanvasWidth()
+            public override float GetCanvasWidth()
             {
-                return 576; // 128 * 4.5
+                return Ratio * logicAPI.GetTableWidth();
             }
 
-            public override int GetCanvasHeight()
+            public override float GetCanvasHeight()
             {
-                return 432; // 96 * 4.5
+                return Ratio * logicAPI.GetTableHeight();
             }
         }
     }

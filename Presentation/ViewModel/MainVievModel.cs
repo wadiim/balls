@@ -14,14 +14,12 @@ namespace ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ICommand StartButtonClick { get; set; }
-        public int CanvasWidth { get; }
-        public int CanvasHeight { get; }
+        public float CanvasWidth { get; }
+        public float CanvasHeight { get; }
         private string _InputText;
 
         public MainViewModel()
         {
-            System.Diagnostics.Trace.WriteLine("Initializing MainViewModel");
-
             modelAPI = ModelAbstractAPI.CreaetModelAPI();
             Balls = new ObservableCollection<IBall>();
 
@@ -33,8 +31,6 @@ namespace ViewModel
 
         private void StartButtonClickHandler()
         {
-            System.Diagnostics.Trace.WriteLine("Handling start button click");
-
             int numOfBalls = ReadFromTextBox();
             modelAPI.StartSimulation(numOfBalls);
 
@@ -59,8 +55,7 @@ namespace ViewModel
             if (int.TryParse(InputText, out _) && InputText != "0")
             {
                 int number = int.Parse(InputText);
-                System.Diagnostics.Trace.WriteLine("Number of balls read from input: " + number);
-                return number > 10 ? 10 : number;
+                return number > 32 ? 32 : number;
             }
             return 0;
         }

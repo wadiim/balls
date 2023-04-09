@@ -63,12 +63,12 @@ namespace Data
                 return Balls.GetBall(ballId).Velocity;
             }
 
-            public override float GetTableHeight()
+            public override float GetTableWidth()
             {
                 return Table.Width;
             }
 
-            public override float GetTableWidth()
+            public override float GetTableHeight()
             {
                 return Table.Height;
             }

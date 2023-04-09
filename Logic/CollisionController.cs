@@ -10,12 +10,7 @@ namespace Logic
             Vector2 nextPosition = ballPosition + ballVelocity;
 
             // Check if the ball will hit the left or right wall at the next time step
-            if (nextPosition.X - ballRadius < 0 || nextPosition.X + ballRadius > boardWidth)
-            {
-                return true;
-            }
-
-            return false;
+            return nextPosition.X - ballRadius <= 0 || nextPosition.X + ballRadius >= boardWidth;
         }
 
         public static bool IsCollisionWithHorizontalWall(Vector2 ballPosition, Vector2 ballVelocity, float ballRadius, float boardHeight)
@@ -24,12 +19,7 @@ namespace Logic
             Vector2 nextPosition = ballPosition + ballVelocity;
 
             // Check if the ball will hit the top or bottom wall at the next time step
-            if (nextPosition.Y - ballRadius < 0 || nextPosition.Y + ballRadius > boardHeight)
-            {
-                return true;
-            }
-
-            return false;
+            return nextPosition.Y - ballRadius <= 0 || nextPosition.Y + ballRadius >= boardHeight;
         }
 
 

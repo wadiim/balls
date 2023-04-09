@@ -15,12 +15,7 @@ namespace ViewModel
 
         public bool CanExecute(object parameter)
         {
-            if (m_CanExecute == null)
-            {
-                return true;
-            }
-
-            return parameter == null ? m_CanExecute() : m_CanExecute();
+            return m_CanExecute == null || (parameter == null ? m_CanExecute() : m_CanExecute());
         }
 
         public virtual void Execute(object parameter)
