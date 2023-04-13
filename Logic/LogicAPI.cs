@@ -28,6 +28,8 @@ namespace Logic
             private readonly DataAbstractAPI dataAPI;
             private Task simulation;
             private IObserver<int> observer = null;
+            private static readonly Random Rand = new Random();
+            private static readonly Vector2 maxVelocity = new Vector2(0.01f, 0.01f);
 
             private class Unsubscriber : IDisposable
             {
@@ -72,7 +74,6 @@ namespace Logic
             public override void StartSimulation(int numOfBalls)
             {
                 Vector2 maxPosition = new Vector2(dataAPI.GetTableWidth(), dataAPI.GetTableHeight());
-                Vector2 maxVelocity = new Vector2(0.001f, 0.001f);
                 dataAPI.CreateBalls(numOfBalls, maxPosition, maxVelocity);
 
                 // Run the simulation asynchronously
@@ -91,45 +92,30 @@ namespace Logic
             {
                 int ballsCount = dataAPI.GetBallsCount();
 
-                // Handle collisions
+                // Update ball positions
                 for (int i = 0; i < ballsCount; ++i)
                 {
-                    // Handle collisions between balls
-                    for (int j = i + 1; j < ballsCount; ++j)
-                    {
-                        Vector2 firstBallVelocity = dataAPI.GetBallVelocity(i);
-                        Vector2 secondBallVelocity = dataAPI.GetBallVelocity(j);
-
-                        if (CollisionController.IsCollision(
-                            dataAPI.GetBallPosition(i), firstBallVelocity, dataAPI.GetBallRadius(i),
-                            dataAPI.GetBallPosition(j), secondBallVelocity, dataAPI.GetBallRadius(j)
-                            ))
-                        {
-                            // Swap velocities
-                            dataAPI.SetBallVelocity(i, secondBallVelocity);
-                            dataAPI.SetBallVelocity(j, firstBallVelocity);
-                        }
-                    }
+                    Vector2 velocity = dataAPI.GetBallVelocity(i);
+                    velocity.X = ((float)Rand.NextDouble() * 2 * maxVelocity.X) - maxVelocity.X;
+                    velocity.Y = ((float)Rand.NextDouble() * 2 * maxVelocity.Y) - maxVelocity.Y;
 
                     // Handle collision with a vertical wall
                     if (CollisionController.IsCollisionWithVerticalWall(
-                        dataAPI.GetBallPosition(i), dataAPI.GetBallVelocity(i), dataAPI.GetBallRadius(i), dataAPI.GetTableWidth()
+                        dataAPI.GetBallPosition(i), velocity, dataAPI.GetBallRadius(i), dataAPI.GetTableWidth()
                         ))
                     {
-                        Vector2 velocity = dataAPI.GetBallVelocity(i);
                         velocity.X *= -1.0f;
-                        dataAPI.SetBallVelocity(i, velocity);
                     }
 
                     // Handle collision with a horizontal wall
                     if (CollisionController.IsCollisionWithHorizontalWall(
-                        dataAPI.GetBallPosition(i), dataAPI.GetBallVelocity(i), dataAPI.GetBallRadius(i), dataAPI.GetTableHeight()
+                        dataAPI.GetBallPosition(i), velocity, dataAPI.GetBallRadius(i), dataAPI.GetTableHeight()
                         ))
                     {
-                        Vector2 velocity = dataAPI.GetBallVelocity(i);
                         velocity.Y *= -1.0f;
-                        dataAPI.SetBallVelocity(i, velocity);
                     }
+
+                    dataAPI.SetBallVelocity(i, velocity);
                 }
 
                 // Update position of each ball
