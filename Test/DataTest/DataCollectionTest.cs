@@ -39,7 +39,6 @@ namespace DataTest
 
             Assert.IsNotNull(ball);
             Assert.IsInstanceOfType(ball, typeof(Ball));
-            Assert.AreEqual(2, ball.Id);
         }
 
         [TestMethod]

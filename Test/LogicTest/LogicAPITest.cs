@@ -33,21 +33,15 @@ namespace LogicTest
         }
 
         [TestMethod]
-        public void UpdateSimulation_UpdatesBallPositions()
+        public void StartSimulation_UpdatesBallPositions()
         {
-            var logicAPI = LogicAbstractAPI.CreateLogicAPI();
+            LogicAbstractAPI logicAPI = LogicAbstractAPI.CreateLogicAPI();
             int numOfBalls = 20;
             logicAPI.StartSimulation(numOfBalls);
-
-            logicAPI.UpdateSimulation();
 
             for (int i = 0; i < numOfBalls; i++)
             {
                 Vector2 position = logicAPI.GetBallPosition(i);
-                if (position.X < 0 || position.X > logicAPI.GetTableWidth() || position.Y < 0 || position.Y > logicAPI.GetTableHeight())
-                {
-                    logicAPI.UpdateSimulation();
-                }
                 Assert.IsTrue(position.X >= 0);
                 Assert.IsTrue(position.X <= logicAPI.GetTableWidth());
                 Assert.IsTrue(position.Y >= 0);
