@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -11,6 +12,9 @@ namespace Data
         public Vector2 Velocity { get; set; }
         public float Mass { get; private set; }
         public float Radius { get; private set; }
+
+        private static readonly int MILISECONDS_PER_STEP = 10;
+        private static readonly float STEP_SIZE = 0.1f;
 
         internal readonly IList<IObserver<Ball>> observers;
 
@@ -28,12 +32,16 @@ namespace Data
         {
             while (true)
             {
-                Position += Velocity;
+                Stopwatch watch = Stopwatch.StartNew();
+                float steps = Velocity.Length() / STEP_SIZE;
+                Position += Vector2.Normalize(Velocity) * STEP_SIZE;
                 foreach (IObserver<Ball> observer in observers)
                 {
                     observer.OnNext(this);
                 }
-                await Task.Delay(4);
+                watch.Stop();
+                int delay = (int)(Convert.ToInt32(MILISECONDS_PER_STEP / steps) - watch.ElapsedMilliseconds);
+                await Task.Delay(delay > 0 ? delay : 0);
             }
         }
 
