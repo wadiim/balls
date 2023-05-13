@@ -6,35 +6,38 @@ using System.Collections.Generic;
 
 namespace Data
 {
-    public class Ball : IObservable<Ball>
+    public class Ball : IBall
     {
-        public Vector2 Position { get; private set; }
-        public Vector2 Velocity { get; set; }
+        private Vector2 _Position;
+        private readonly float _Radius;
+
+        public override Vector2 Position => _Position;
+        public override Vector2 Velocity { get; set; }
         public float Mass { get; private set; }
-        public float Radius { get; private set; }
+        public override float Radius => _Radius;
 
         private static readonly int MILISECONDS_PER_STEP = 10;
         private static readonly float STEP_SIZE = 0.1f;
 
-        internal readonly IList<IObserver<Ball>> observers;
+        internal readonly IList<IObserver<IBall>> observers;
 
         public Ball(Vector2 position, Vector2 velocity)
         {
-            observers = new List<IObserver<Ball>>();
+            observers = new List<IObserver<IBall>>();
 
-            Position = position;
+            _Position = position;
             Velocity = velocity;
             Mass = 10.0F;
-            Radius = 2.0F;
+            _Radius = 2.0F;
         }
 
-        public async void StartMoving()
+        public override async void StartMoving()
         {
             while (true)
             {
                 Stopwatch watch = Stopwatch.StartNew();
                 float steps = Velocity.Length() / STEP_SIZE;
-                Position += Vector2.Normalize(Velocity) * STEP_SIZE;
+                _Position += Vector2.Normalize(Velocity) * STEP_SIZE;
                 foreach (IObserver<Ball> observer in observers)
                 {
                     observer.OnNext(this);
@@ -45,7 +48,7 @@ namespace Data
             }
         }
 
-        public IDisposable Subscribe(IObserver<Ball> observer)
+        public override IDisposable Subscribe(IObserver<IBall> observer)
         {
             if (!observers.Contains(observer))
                 observers.Add(observer);
@@ -54,11 +57,11 @@ namespace Data
 
         private class Unsubscriber : IDisposable
         {
-            private readonly IList<IObserver<Ball>> _observers;
-            private readonly IObserver<Ball> _observer;
+            private readonly IList<IObserver<IBall>> _observers;
+            private readonly IObserver<IBall> _observer;
 
             public Unsubscriber
-            (IList<IObserver<Ball>> observers, IObserver<Ball> observer)
+            (IList<IObserver<IBall>> observers, IObserver<IBall> observer)
             {
                 _observers = observers;
                 _observer = observer;

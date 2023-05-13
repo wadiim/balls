@@ -1,12 +1,24 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Data
 {
+    public abstract class IBall : IObservable<IBall>
+    {
+        public abstract Vector2 Position { get; }
+        public abstract Vector2 Velocity { get; set; }
+        public abstract float Radius { get; }
+
+        public abstract void StartMoving();
+
+        public abstract IDisposable Subscribe(IObserver<IBall> observer);
+    }
+
     public abstract class DataAbstractAPI
     {
         public abstract void CreateBalls(int NumOfBalls, Vector2 maxPosition, Vector2 maxVelocity);
         public abstract int GetBallsCount();
-        public abstract Ball GetBall(int index);
+        public abstract IBall GetBall(int index);
 
         public abstract float GetTableWidth();
         public abstract float GetTableHeight();
@@ -37,7 +49,7 @@ namespace Data
                 return Balls.Count();
             }
 
-            public override Ball GetBall(int index)
+            public override IBall GetBall(int index)
             {
                 return Balls.GetBall(index);
             }

@@ -5,7 +5,7 @@ using Data;
 
 namespace Logic
 {
-    public abstract class LogicAbstractAPI : IObserver<Ball>, IObservable<int>
+    public abstract class LogicAbstractAPI : IObserver<IBall>, IObservable<int>
     {
         public abstract void StartSimulation(int numOfBalls);
 
@@ -19,7 +19,7 @@ namespace Logic
 
         public abstract void OnCompleted();
         public abstract void OnError(Exception error);
-        public abstract void OnNext(Ball ball);
+        public abstract void OnNext(IBall ball);
 
         public static LogicAbstractAPI CreateLogicAPI(DataAbstractAPI dataAPI = default)
         {
@@ -79,7 +79,7 @@ namespace Logic
                 dataAPI.CreateBalls(numOfBalls, maxPosition, maxVelocity);
                 for (int i = 0; i < dataAPI.GetBallsCount(); ++i)
                 {
-                    Ball ball = dataAPI.GetBall(i);
+                    IBall ball = dataAPI.GetBall(i);
                     ball.Subscribe(this);
                     Task.Run(() => { ball.StartMoving(); });
                 }
@@ -101,7 +101,7 @@ namespace Logic
                 throw new NotImplementedException();
             }
 
-            public override void OnNext(Ball ball)
+            public override void OnNext(IBall ball)
             {
                 lock (ballLock)
                 {
@@ -111,7 +111,7 @@ namespace Logic
                     // Handle collisions
                     for (int i = 0; i < ballsCount; ++i)
                     {
-                        Ball other = dataAPI.GetBall(i);
+                        IBall other = dataAPI.GetBall(i);
 
                         if (ball == other)
                         {
