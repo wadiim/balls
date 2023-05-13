@@ -8,11 +8,43 @@ namespace Data
 {
     public class Ball : IBall
     {
+        private readonly object PositionLock = new object();
+        private readonly object VelocityLock = new object();
+
         private Vector2 _Position;
+        private Vector2 _Velocity;
         private readonly float _Radius;
 
-        public override Vector2 Position => _Position;
-        public override Vector2 Velocity { get; set; }
+        public override Vector2 Position
+        {
+            get
+            {
+                lock (PositionLock)
+                {
+                    return _Position;
+                }
+            }
+        }
+
+        public override Vector2 Velocity
+        {
+            get
+            {
+                lock (VelocityLock)
+                {
+                    return _Velocity;
+                }
+            }
+
+            set
+            {
+                lock (VelocityLock)
+                {
+                    _Velocity = value;
+                }
+            }
+        }
+
         public float Mass { get; private set; }
         public override float Radius => _Radius;
 
@@ -26,7 +58,7 @@ namespace Data
             observers = new List<IObserver<IBall>>();
 
             _Position = position;
-            Velocity = velocity;
+            _Velocity = velocity;
             Mass = 10.0F;
             _Radius = 2.0F;
         }
@@ -37,7 +69,12 @@ namespace Data
             {
                 Stopwatch watch = Stopwatch.StartNew();
                 float steps = Velocity.Length() / STEP_SIZE;
-                _Position += Vector2.Normalize(Velocity) * STEP_SIZE;
+
+                lock (PositionLock)
+                {
+                    _Position += Vector2.Normalize(Velocity) * STEP_SIZE;
+                }
+
                 foreach (IObserver<Ball> observer in observers)
                 {
                     observer.OnNext(this);
