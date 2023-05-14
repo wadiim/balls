@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 
 namespace Data
@@ -7,28 +6,17 @@ namespace Data
     public class BallCollection
     {
         private readonly List<Ball> Balls;
-        private static readonly Random Rand = new Random();
 
         public BallCollection()
         {
             Balls = new List<Ball>();
         }
 
-        public void CreateBalls(int NumOfBalls, Vector2 maxPosition, Vector2 maxVelocity)
+        public Ball CreateBall(Vector2 position, Vector2 velocity)
         {
-            for (int i = 0; i < NumOfBalls; ++i)
-            {
-                Balls.Add(new Ball(
-                    new Vector2(
-                        ((float)Rand.NextDouble() * (maxPosition.X - 8.0F - float.Epsilon)) + (4.0F + float.Epsilon),
-                        ((float)Rand.NextDouble() * (maxPosition.Y - 8.0F - float.Epsilon)) + (4.0F + float.Epsilon)
-                        ),
-                    new Vector2(
-                        (float)Rand.NextDouble() * maxVelocity.X,
-                        (float)Rand.NextDouble() * maxVelocity.Y
-                        )
-                    ));
-            }
+            Ball ball = new Ball(position, velocity);
+            Balls.Add(ball);
+            return ball;
         }
 
         public Ball GetBall(int index)

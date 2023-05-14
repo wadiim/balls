@@ -8,48 +8,42 @@ namespace DataTest
     public class BallCollectionTests
     {
         [TestMethod]
-        public void TestCreateBalls()
+        public void TestCreateBall()
         {
-            int numOfBalls = 10;
-            Vector2 maxPosition = new Vector2(100, 100);
-            Vector2 maxVelocity = new Vector2(10, 10);
+            Vector2 position = new Vector2(100, 100);
+            Vector2 velocity = new Vector2(10, 10);
             BallCollection ballCollection = new BallCollection();
 
-            ballCollection.CreateBalls(numOfBalls, maxPosition, maxVelocity);
+            Ball ball = ballCollection.CreateBall(position, velocity);
 
-            Assert.AreEqual(numOfBalls, ballCollection.Count());
-            for (int i = 0; i < numOfBalls; i++)
-            {
-                Ball ball = ballCollection.GetBall(i);
-                Assert.IsNotNull(ball);
-                Assert.IsTrue(ball.Position.X >= 0 && ball.Position.X <= maxPosition.X);
-                Assert.IsTrue(ball.Position.Y >= 0 && ball.Position.Y <= maxPosition.Y);
-                Assert.IsTrue(ball.Velocity.X >= -maxVelocity.X && ball.Velocity.X <= maxVelocity.X);
-                Assert.IsTrue(ball.Velocity.Y >= -maxVelocity.Y && ball.Velocity.Y <= maxVelocity.Y);
-            }
+            Assert.AreEqual(1, ballCollection.Count());
+            Assert.AreEqual(position, ball.Position);
+            Assert.AreEqual(velocity, ball.Velocity);
         }
 
         [TestMethod]
         public void TestGetBall()
         {
             BallCollection ballCollection = new BallCollection();
-            ballCollection.CreateBalls(3, new Vector2(100, 100), new Vector2(10, 10));
+            Ball created = ballCollection.CreateBall(new Vector2(100, 100), new Vector2(10, 10));
 
-            Ball ball = ballCollection.GetBall(2);
+            Ball returned = ballCollection.GetBall(0);
 
-            Assert.IsNotNull(ball);
-            Assert.IsInstanceOfType(ball, typeof(Ball));
+            Assert.IsNotNull(returned);
+            Assert.IsInstanceOfType(returned, typeof(Ball));
+            Assert.AreEqual(created, returned);
         }
 
         [TestMethod]
         public void TestCount()
         {
             BallCollection ballCollection = new BallCollection();
-            ballCollection.CreateBalls(2, new Vector2(100, 100), new Vector2(10, 10));
+            for (int i = 0; i < 5; ++i)
+            {
+                _ = ballCollection.CreateBall(new Vector2(100, 100), new Vector2(10, 10));
+            }
 
-            int result = ballCollection.Count();
-
-            Assert.AreEqual(2, result);
+            Assert.AreEqual(5, ballCollection.Count());
         }
     }
 }

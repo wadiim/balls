@@ -76,12 +76,23 @@ namespace Logic
             {
                 Vector2 maxPosition = new Vector2(dataAPI.GetTableWidth(), dataAPI.GetTableHeight());
                 Vector2 maxVelocity = new Vector2(0.5f, 0.5f);
-                dataAPI.CreateBalls(numOfBalls, maxPosition, maxVelocity);
-                for (int i = 0; i < dataAPI.GetBallsCount(); ++i)
+
+                Random Rand = new Random();
+
+                for (int i = 0; i < numOfBalls; ++i)
                 {
-                    IBall ball = dataAPI.GetBall(i);
-                    ball.Subscribe(this);
-                    Task.Run(() => { ball.StartMoving(); });
+                    IBall ball = dataAPI.CreateBall(
+                        new Vector2(
+                        ((float)Rand.NextDouble() * (maxPosition.X - 8.0F - float.Epsilon)) + (4.0F + float.Epsilon),
+                        ((float)Rand.NextDouble() * (maxPosition.Y - 8.0F - float.Epsilon)) + (4.0F + float.Epsilon)
+                        ),
+                    new Vector2(
+                        (float)Rand.NextDouble() * maxVelocity.X - (maxVelocity.X / 2),
+                        (float)Rand.NextDouble() * maxVelocity.Y - (maxVelocity.Y / 2)
+                        )
+                    );
+                    _ = ball.Subscribe(this);
+                    _ = Task.Run(() => { ball.StartMoving(); });
                 }
             }
 

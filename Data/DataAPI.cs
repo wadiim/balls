@@ -16,7 +16,7 @@ namespace Data
 
     public abstract class DataAbstractAPI
     {
-        public abstract void CreateBalls(int NumOfBalls, Vector2 maxPosition, Vector2 maxVelocity);
+        public abstract IBall CreateBall(Vector2 position, Vector2 velocity);
         public abstract int GetBallsCount();
         public abstract IBall GetBall(int index);
 
@@ -39,9 +39,9 @@ namespace Data
                 Table = new Table(128, 96);
             }
 
-            public override void CreateBalls(int NumOfBalls, Vector2 maxPosition, Vector2 maxVelocity)
+            public override IBall CreateBall(Vector2 position, Vector2 velocity)
             {
-                Balls.CreateBalls(NumOfBalls, maxPosition, maxVelocity);
+                return Balls.CreateBall(position, velocity);
             }
 
             public override int GetBallsCount()

@@ -8,24 +8,26 @@ namespace DataTest
     public class DataAPITest
     {
         [TestMethod]
-        public void TestCreateBalls()
+        public void TestCreateBall()
         {
             DataAbstractAPI api = DataAbstractAPI.CreateDataAPI();
-            int expectedCount = 2;
-            Vector2 maxPosition = new Vector2(100, 100);
-            Vector2 maxVelocity = new Vector2(10, 10);
+            Vector2 position = new Vector2(100, 100);
+            Vector2 velocity = new Vector2(10, 10);
 
-            api.CreateBalls(expectedCount, maxPosition, maxVelocity);
-            int actualCount = api.GetBallsCount();
+            IBall ball = api.CreateBall(position, velocity);
 
-            Assert.AreEqual(expectedCount, actualCount);
+            Assert.AreEqual(position, ball.Position);
+            Assert.AreEqual(velocity, ball.Velocity);
         }
 
         [TestMethod]
         public void TestGetBallsCount()
         {
             DataAbstractAPI api = DataAbstractAPI.CreateDataAPI();
-            api.CreateBalls(5, new Vector2(100, 100), new Vector2(10, 10));
+            for (int i = 0; i < 5; ++i)
+            {
+                api.CreateBall(new Vector2(100, 100), new Vector2(10, 10));
+            }
 
             int result = api.GetBallsCount();
 
