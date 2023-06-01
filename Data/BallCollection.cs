@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Data
 {
-    public class BallCollection
+    internal class BallCollection
     {
         private readonly List<Ball> Balls;
 

@@ -1,6 +1,6 @@
 ﻿namespace Data
 {
-    public class Table
+    internal class Table
     {
         public float Width { get; }
         public float Height { get; }

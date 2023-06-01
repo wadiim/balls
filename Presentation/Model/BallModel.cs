@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Model
 {
-    public class BallModel : IBall
+    internal class BallModel : IBall
     {
         public int Id { get; }
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Data
 {
-    public class Ball : IBall
+    internal class Ball : IBall
     {
         private readonly object PositionLock = new object();
         private readonly object VelocityLock = new object();

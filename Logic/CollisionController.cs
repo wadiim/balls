@@ -2,7 +2,7 @@
 
 namespace Logic
 {
-    public class CollisionController
+    internal class CollisionController
     {
         public static bool IsCollisionWithVerticalWall(Vector2 ballPosition, Vector2 ballVelocity, float ballRadius, float boardWidth)
         {
