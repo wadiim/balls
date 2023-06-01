@@ -6,7 +6,7 @@ using Model;
 
 namespace ViewModel
 {
-    internal class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         private readonly ModelAbstractAPI modelAPI;
         public ObservableCollection<IBall> Balls { get; set; }
