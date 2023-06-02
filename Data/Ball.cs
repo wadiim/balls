@@ -75,6 +75,8 @@ namespace Data
                     _Position += Vector2.Normalize(Velocity) * STEP_SIZE;
                 }
 
+                Logger.GetInstance().LogBallPosition(new Vector2(Position.X, Position.Y));
+
                 foreach (IObserver<Ball> observer in observers)
                 {
                     observer.OnNext(this);
